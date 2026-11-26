@@ -18,6 +18,7 @@ export interface ClientConfig {
   maxUploadBytes: number;
   maxRelayBytes: number;
   authRequired: boolean;
+  passwordConfigured: boolean;
   authenticated: boolean;
 }
 

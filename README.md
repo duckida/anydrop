@@ -49,12 +49,12 @@ That is the whole setup. There is no build-time configuration and no database.
 | Variable | Example | Notes |
 | --- | --- | --- |
 | `ANYCUBIC_TOKEN` | `eyJhbGciOi…` | Cloud token for the printer's account. See below. |
+| `ANYDROP_PASSWORD` | `a-long-random-password` | Dashboard password. The app will not run without it. |
 
 ### Recommended
 
 | Variable | Default | Notes |
 | --- | --- | --- |
-| `ANYDROP_PASSWORD` | _(empty)_ | Password for the dashboard. Without it, anyone with the URL can start prints. |
 | `ANYDROP_SESSION_SECRET` | hash of password | Key for the signed session cookie. Set a long random string if you rotate the password. |
 | `BLOB_READ_WRITE_TOKEN` | _(empty)_ | Enables the upload fallback. Vercel injects this when you create a Blob store. |
 | `ANYDROP_BLOB_ACCESS` | `public` | `public` or `private` — must match the Blob store's access mode. |
@@ -143,12 +143,12 @@ pnpm start       # serve the production build
 ## Security
 
 - The Anycubic token is read from the environment on the server only. It is never included in `/api/config`, HTML, or client bundles.
-- `/api/state`, `/api/print`, `/api/control`, and the upload routes require the signed session cookie when `ANYDROP_PASSWORD` is set.
+- `/api/state`, `/api/print`, `/api/control`, and the upload routes require the signed session cookie; `ANYDROP_PASSWORD` is required.
 - Login attempts are rate-limited per IP (in-memory; reset on cold start).
 - Presigned upload URLs are validated against Anycubic/S3 hosts before the server relays anything to them.
 - Session cookies are `HttpOnly`, `SameSite=Lax`, and `Secure` in production.
 
-If you expose anydrop publicly, set `ANYDROP_PASSWORD`. Starting a print on someone else's printer is a bad surprise.
+`ANYDROP_PASSWORD` is required. Starting a print on someone else's printer is a bad surprise.
 
 ## Credits
 

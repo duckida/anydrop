@@ -4,6 +4,7 @@ import {
   authRequired,
   checkPassword,
   createSessionValue,
+  passwordConfigured,
   sessionCookieOptions,
 } from "@/lib/auth";
 import { readJson } from "@/lib/http";
@@ -19,6 +20,13 @@ function clientKey(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  if (!passwordConfigured()) {
+    return NextResponse.json(
+      { error: "ANYDROP_PASSWORD is not set on this deployment." },
+      { status: 503 },
+    );
+  }
+
   if (!authRequired()) {
     return NextResponse.json({ ok: true });
   }

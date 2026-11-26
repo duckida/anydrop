@@ -159,6 +159,30 @@ export function Dashboard() {
     );
   }
 
+  if (!config.passwordConfigured && !config.demo) {
+    return (
+      <div className="login-screen">
+        <div className="login-glow" aria-hidden="true" />
+        <div className="login-card">
+          <div className="login-brand">
+            <Logo size={46} />
+            <div>
+              <h1>anydrop</h1>
+              <p>Password required.</p>
+            </div>
+          </div>
+          <p className="muted" style={{ fontSize: 12.5, lineHeight: 1.6 }}>
+            Set <code>ANYDROP_PASSWORD</code> in your Vercel project environment variables, then redeploy.
+            This app refuses to run without a password.
+          </p>
+          <p className="login-foot">
+            The password gate protects your Anycubic account from anyone who finds the URL.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (config.authRequired && !config.authenticated) {
     return <Login onSuccess={afterLogin} />;
   }

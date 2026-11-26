@@ -17,8 +17,13 @@ function sign(payload: string): string {
   return crypto.createHmac("sha256", secret()).update(payload).digest("hex");
 }
 
-export function authRequired(): boolean {
+export function passwordConfigured(): boolean {
   return getConfig().password.length > 0;
+}
+
+export function authRequired(): boolean {
+  // The dashboard is password-gated. Demo mode stays usable without one.
+  return passwordConfigured() || !getConfig().demo;
 }
 
 export function createSessionValue(): string {

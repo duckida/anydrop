@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { authRequired, isAuthenticated } from "./auth";
+import { authRequired, isAuthenticated, passwordConfigured } from "./auth";
 import { getConfig } from "./config";
 import { AnycubicError } from "./anycubic";
 
@@ -9,6 +9,12 @@ export function unauthorized(): NextResponse {
 
 export function ensureAuthenticated(request: NextRequest): NextResponse | null {
   if (!authRequired()) return null;
+  if (!passwordConfigured()) {
+    return NextResponse.json(
+      { error: "ANYDROP_PASSWORD must be set before this app can be used." },
+      { status: 503 },
+    );
+  }
   return isAuthenticated(request) ? null : unauthorized();
 }
 
