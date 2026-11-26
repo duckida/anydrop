@@ -80,10 +80,8 @@ export function getConfig(): AppConfig {
     blobAccess,
     maxUploadBytes:
       process.env.ANYDROP_MAX_UPLOAD_KB !== undefined
-        ? kilobytes(process.env.ANYDROP_MAX_UPLOAD_KB, 200)
-        : process.env.ANYDROP_MAX_UPLOAD_MB !== undefined
-          ? megabytes(process.env.ANYDROP_MAX_UPLOAD_MB, 0.1953125)
-          : 200 * 1024,
+        ? kilobytes(process.env.ANYDROP_MAX_UPLOAD_KB, 2048)
+        : megabytes(process.env.ANYDROP_MAX_UPLOAD_MB, 2),
     maxRelayBytes: megabytes(process.env.ANYDROP_MAX_RELAY_MB, 256),
     demo: process.env.ANYDROP_DEMO === "1",
   };
