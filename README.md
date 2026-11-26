@@ -66,7 +66,7 @@ That is the whole setup. There is no build-time configuration and no database.
 | `ANYCUBIC_AUTH_MODE` | `web` | `web` or `slicer`. |
 | `ANYCUBIC_REGION` | `global` | `global` or `cn` (mainland China cloud). |
 | `ANYDROP_UPLOAD_MODE` | `auto` | `auto`, `direct`, or `blob`. |
-| `ANYDROP_MAX_UPLOAD_MB` | `512` | Largest file the UI accepts. |
+| `ANYDROP_MAX_UPLOAD_KB` | `200` | Largest file the UI accepts (kilobytes). |
 | `ANYDROP_MAX_RELAY_MB` | `256` | Largest file the Blob relay will buffer. |
 | `ANYDROP_DEMO` | `0` | `1` renders mock data, disables cloud calls and uploads. |
 

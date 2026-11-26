@@ -56,6 +56,12 @@ function megabytes(value: string | undefined, fallback: number): number {
   return Math.floor(parsed * 1024 * 1024);
 }
 
+function kilobytes(value: string | undefined, fallback: number): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  return Math.floor(parsed * 1024);
+}
+
 export function getConfig(): AppConfig {
   const region = oneOf<Region>(process.env.ANYCUBIC_REGION, ["global", "cn"], "global");
   const authMode = oneOf<AuthMode>(process.env.ANYCUBIC_AUTH_MODE, ["web", "slicer"], "web");
@@ -72,7 +78,12 @@ export function getConfig(): AppConfig {
     uploadMode,
     blobToken: (process.env.BLOB_READ_WRITE_TOKEN ?? "").trim(),
     blobAccess,
-    maxUploadBytes: megabytes(process.env.ANYDROP_MAX_UPLOAD_MB, 512),
+    maxUploadBytes:
+      process.env.ANYDROP_MAX_UPLOAD_KB !== undefined
+        ? kilobytes(process.env.ANYDROP_MAX_UPLOAD_KB, 200)
+        : process.env.ANYDROP_MAX_UPLOAD_MB !== undefined
+          ? megabytes(process.env.ANYDROP_MAX_UPLOAD_MB, 0.1953125)
+          : 200 * 1024,
     maxRelayBytes: megabytes(process.env.ANYDROP_MAX_RELAY_MB, 256),
     demo: process.env.ANYDROP_DEMO === "1",
   };
