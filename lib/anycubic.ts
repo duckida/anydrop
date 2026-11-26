@@ -268,7 +268,9 @@ async function rawRequest<T>(path: string, options: RequestOptions = {}): Promis
   }
 
   const code = typeof envelope.code === "number" ? envelope.code : 0;
-  if (code !== 0 && code !== 200) {
+  // The cloud has been observed returning 0, 1 and 200 for successful calls.
+  // Real failures use large codes (e.g. 10001 for expired login).
+  if (code !== 0 && code !== 1 && code !== 200) {
     const message = explainError(code, envelope.msg ?? "");
     throw new AnycubicError(message, { code, detail: envelope });
   }
