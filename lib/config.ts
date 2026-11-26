@@ -50,16 +50,24 @@ function oneOf<T extends string>(value: string | undefined, allowed: readonly T[
   return (allowed as readonly string[]).includes(normalised) ? (normalised as T) : fallback;
 }
 
-function megabytes(value: string | undefined, fallback: number): number {
+function megabytes(value: string | undefined, fallbackMB: number): number {
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  if (!Number.isFinite(parsed) || parsed <= 0) return Math.floor(fallbackMB * 1024 * 1024);
   return Math.floor(parsed * 1024 * 1024);
 }
 
-function kilobytes(value: string | undefined, fallback: number): number {
+function kilobytes(value: string | undefined, fallbackKB: number): number {
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  if (!Number.isFinite(parsed) || parsed <= 0) return Math.floor(fallbackKB * 1024);
   return Math.floor(parsed * 1024);
+}
+
+function maxUploadBytesFromEnv(): number {
+  const kb = process.env.ANYDROP_MAX_UPLOAD_KB?.trim();
+  if (kb) return kilobytes(kb, 2048);
+  const mb = process.env.ANYDROP_MAX_UPLOAD_MB?.trim();
+  if (mb) return megabytes(mb, 2);
+  return 2 * 1024 * 1024;
 }
 
 export function getConfig(): AppConfig {
@@ -78,10 +86,7 @@ export function getConfig(): AppConfig {
     uploadMode,
     blobToken: (process.env.BLOB_READ_WRITE_TOKEN ?? "").trim(),
     blobAccess,
-    maxUploadBytes:
-      process.env.ANYDROP_MAX_UPLOAD_KB !== undefined
-        ? kilobytes(process.env.ANYDROP_MAX_UPLOAD_KB, 2048)
-        : megabytes(process.env.ANYDROP_MAX_UPLOAD_MB, 2),
+    maxUploadBytes: maxUploadBytesFromEnv(),
     maxRelayBytes: megabytes(process.env.ANYDROP_MAX_RELAY_MB, 256),
     demo: process.env.ANYDROP_DEMO === "1",
   };
